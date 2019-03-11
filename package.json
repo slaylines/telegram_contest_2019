@@ -2,15 +2,17 @@
   "name": "tgcontest",
   "version": "1.0.0",
   "description": "https://t.me/contest",
-  "main": "src/index.html",
+  "main": "src/index.pug",
   "author": "Michael Kalygin",
   "license": "MIT",
   "scripts": {
-    "start": "parcel serve src/index.html --open",
+    "start": "parcel serve src/index.pug --open",
     "prebuild": "rm -rf dist",
-    "build": "parcel build src/index.html"
+    "build": "parcel build src/index.pug"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.0"
+    "parcel-bundler": "^1.12.0",
+    "pug": "^2.0.3",
+    "sass": "^1.17.2"
   }
 }
