@@ -1,0 +1,8 @@
+{
+  "name": "tgcontest",
+  "version": "1.0.0",
+  "description": "https://t.me/contest",
+  "main": "src/index.html",
+  "author": "Michael Kalygin",
+  "license": "MIT"
+}
