@@ -4,5 +4,13 @@
   "description": "https://t.me/contest",
   "main": "src/index.html",
   "author": "Michael Kalygin",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel serve src/index.html --open",
+    "prebuild": "rm -rf dist",
+    "build": "parcel build src/index.html"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.0"
+  }
 }
