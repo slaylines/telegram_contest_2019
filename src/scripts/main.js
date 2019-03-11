@@ -1,1 +1,3 @@
-console.log('it works');
+import charts from '../data/charts.json';
+
+console.log(charts);
