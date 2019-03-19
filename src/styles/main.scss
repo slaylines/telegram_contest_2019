@@ -1,33 +1,116 @@
+@import './variables';
+@import './mixins';
+
 * {
   box-sizing: border-box;
 }
 
-.inputs {
-  display: inline-block;
-  margin-right: 20px;
-
-  label,
-  input {
-    display: block;
-  }
-
-  input {
-    margin-bottom: 10px;
-  }
-}
-
-path {
-  opacity: 1;
-  transition: all 2s linear;
-
-  &.hidden {
-    opacity: 0;
-  }
+html,
+body {
+  width: 100%;
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 12px;
 }
 
 main {
-  margin: 20px 0;
-  width: 800px;
-  height: 300px;
-  background: lightgray;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+figure {
+  position: relative;
+  width: 100%;
+  margin: 10px 20px;
+  padding: 0;
+}
+
+.plot {
+  width: 100%;
+  height: 400px;
+
+  path {
+    stroke-width: 2px;
+    fill: none;
+    opacity: 1;
+    transition: opacity 200ms ease-in-out;
+
+    &.hidden {
+      opacity: 0;
+    }
+  }
+}
+
+.timeline {
+  width: 100%;
+  height: 70px;
+
+  path {
+    stroke-width: 1px;
+    fill: none;
+    opacity: 1;
+    transition: opacity 200ms ease-in-out;
+
+    &.hidden {
+      opacity: 0;
+    }
+  }
+}
+
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+
+  .filter-button {
+    position: relative;
+    display: flex;
+    height: $filter-button-height;
+    align-items: center;
+    margin-right: 16px;
+    padding: 0 #{$filter-button-height / 4};
+    border: 1px solid $gray;
+    border-radius: $filter-button-height / 2;
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+
+    .filter-circle {
+      position: relative;
+      width: $filter-circle-size;
+      height: $filter-circle-size;
+      border: 2px solid transparent;
+      border-radius: 50%;
+      color: $white;
+      text-align: center;
+      transition: border 200ms ease-in-out;
+    }
+
+    .filter-name {
+      margin-left: $filter-button-height / 4;
+      margin-right: $filter-button-height / 8;
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      display: block;
+      top: $filter-button-height / 2 - $filter-checkmark-size / 2;
+      left: $filter-button-height / 4 + $filter-circle-size / 2 -
+        $filter-checkmark-size / 2;
+      width: $filter-checkmark-size;
+      height: $filter-checkmark-size;
+      background: $checkmark-icon;
+      background-repeat: no-repeat;
+      background-size: cover;
+      z-index: 1;
+    }
+
+    &.checked {
+      .filter-circle {
+        border-width: $filter-circle-size / 2;
+      }
+    }
+  }
 }
