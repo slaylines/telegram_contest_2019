@@ -8,6 +8,27 @@ html(lang="en")
 
     link(rel="stylesheet" href="./styles/main.scss")
   body
+    div.inputs
+      label(for="xmin") X min:
+      input(id="xmin" type="number" value="0")
+
+      label(for="xmax") X max:
+      input(id="xmax" type="number" value="800")
+
+    div.inputs
+      label(for="ymin") Y min:
+      input(id="ymin" type="number" value="0")
+
+      label(for="ymax") Y max:
+      input(id="ymax" type="number" value="300")
+
+    div.inputs
+      label(for="duration") Duration:
+      input(id="duration" type="number" value="1000")
+
+    div.inputs
+      button(id="start") Start
+
     main
     script(src="./scripts/main.js")
 
