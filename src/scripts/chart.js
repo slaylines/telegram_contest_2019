@@ -2,6 +2,7 @@ import Plot from './plot';
 import YAxis from './yaxis';
 import Timeline from './timeline';
 import Filter from './filter';
+import Legend from './legend';
 import { ChartType } from './constants';
 import { createElement, pairsToObject, objectFilter, objectMap } from './utils';
 
@@ -70,8 +71,14 @@ class Chart {
       onFilterToggle: this.onFilterToggle.bind(this),
     });
 
+    this.legend = new Legend({
+      x: this.x,
+      graphs: this.graphs,
+    });
+
     this.plot.appendTo(this.$plot);
     this.yaxis.appendTo(this.$plot);
+    this.legend.appendTo(this.$plot);
     this.timeline.appendTo(this.$timeline);
     this.filter.appendTo(this.$filter);
   }

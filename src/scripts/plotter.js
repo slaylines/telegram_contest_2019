@@ -53,11 +53,27 @@ class Plotter {
     return sy[1] - sy[0] - ((v - dy[0]) / (dy[1] - dy[0])) * (sy[1] - sy[0]);
   }
 
+  toScreenYInRange(v) {
+    const graphs = objectFilter(this.graphs, (key, graph) => graph.visible);
+    const ymax = max(Object.values(graphs).map(({ values }) => max(values)));
+    const ymin = this.domain.y[0];
+    const sy = this.screen.y;
+
+    return sy[1] - sy[0] - ((v - ymin) / (ymax - ymin)) * (sy[1] - sy[0]);
+  }
+
   toScreen(d) {
     return {
       x: [this.toScreenX(d.x[0]), this.toScreenX(d.x[1])],
       y: [this.toScreenY(d.y[1]), this.toScreenY(d.y[0])],
     };
+  }
+
+  toDomainX(v) {
+    const dx = this.domain.x;
+    const sx = this.screen.x;
+
+    return dx[0] + ((v - sx[0]) / (sx[1] - sx[0])) * (dx[1] - dx[0]);
   }
 
   viewBoxFromScreen(s = this.screen) {

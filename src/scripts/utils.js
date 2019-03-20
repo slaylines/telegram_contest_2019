@@ -1,3 +1,19 @@
+const months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 export const min = array => Math.min.apply(null, array);
 
 export const max = array => Math.max.apply(null, array);
@@ -54,3 +70,11 @@ export const objectMap = (obj, func) =>
 
 export const objectForEach = (obj, func) =>
   Object.entries(obj).forEach(([key, value]) => func(key, value));
+
+export const formatDate = timestamp => {
+  const date = new Date(timestamp);
+
+  return `${days[date.getUTCDay()]}, ${
+    months[date.getUTCMonth()]
+  } ${date.getUTCDate()}`;
+};
