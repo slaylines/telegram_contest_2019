@@ -95,6 +95,10 @@ class Plotter {
       return index === 0 ? `M${x} ${y}` : `${result} L ${x} ${y}`;
     }, '');
   }
+
+  updateDomain() {
+    this.domain = this.domainFromRange(min(this.x), max(this.x));
+  }
 }
 
 export default Plotter;

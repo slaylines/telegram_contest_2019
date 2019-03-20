@@ -39,8 +39,8 @@ class Legend {
     this.$element.addEventListener('mousemove', event => {
       this.onMouseMove(event);
     });
-    this.$element.addEventListener('mouseleave', event => {
-      this.onMouseLeave(event);
+    this.$element.addEventListener('mouseleave', () => {
+      this.onMouseLeave();
     });
   }
 

@@ -70,14 +70,35 @@ figure {
   top: 0;
   left: 0;
   z-index: -1;
+  width: 100%;
+  height: 100%;
 
-  text {
-    font-weight: lighter;
-    fill: #999;
+  hr {
+    position: absolute;
+    margin: 0;
+    left: 0;
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid #ddd;
+    transition: all 100ms linear;
+
+    &.hidden {
+      opacity: 0;
+    }
   }
 
-  line {
-    stroke: #ddd;
+  div {
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    font-weight: lighter;
+    color: #999;
+    margin-top: -14px;
+    transition: all 100ms linear;
+
+    &.hidden {
+      opacity: 0;
+    }
   }
 }
 

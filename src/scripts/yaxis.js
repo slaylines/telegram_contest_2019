@@ -1,9 +1,8 @@
 import Plotter from './plotter';
-import { animateViewBox } from './animation';
-import { createSvgElement } from './utils';
+import { createElement } from './utils';
 
-const numberOfLabels = 6;
-const textMargin = 8;
+const numberOfLabels = 5;
+const textMargin = 4;
 
 class YAxis {
   constructor({ x, graphs }) {
@@ -18,70 +17,81 @@ class YAxis {
   }
 
   render() {
-    this.$element = createSvgElement('svg', {
-      width: this.plotter.width,
-      height: this.plotter.height,
-      viewBox: this.plotter.viewBoxFromScreen(),
-      preserveAspectRatio: 'none',
-      classes: 'yaxis',
+    this.$element = createElement('div', { classes: 'yaxis' });
+
+    const { lines, labels } = this.renderLables();
+    this.lines = lines;
+    this.labels = labels;
+
+    this.labels.forEach($label => {
+      this.$element.appendChild($label);
+    });
+    this.lines.forEach($line => {
+      this.$element.appendChild($line);
     });
 
-    const yRange = this.plotter.domain.y;
-    const delta = yRange[1] - yRange[0];
-
-    // TODO: зафиксировать шаги тиков
-    // TODO: не скейлить лейблы — div?
-    // TODO: пересчитывать текущие тики
-    // TODO: анимировать тики
-
-    const step = Math.floor(delta / numberOfLabels);
-    const linesCount = Math.floor(delta / step);
-
-    this.$texts = createSvgElement('g', {});
-
-    [...Array(linesCount).keys()].forEach(index => {
-      const value = yRange[0] + index * step;
-      const y = this.plotter.toScreenY(value);
-
-      const line = createSvgElement('line', {
-        x1: 0,
-        x2: this.plotter.width,
-        y1: y,
-        y2: y,
-        'vector-effect': 'non-scaling-stroke',
-      });
-
-      const text = createSvgElement('text', {
-        x: 0,
-        y: y - textMargin,
-      });
-
-      const textNode = document.createTextNode(value);
-
-      text.appendChild(textNode);
-      this.$texts.appendChild(text);
-      this.$element.appendChild(line);
-    });
-
-    this.$element.appendChild(this.$texts);
     this.$container.appendChild(this.$element);
   }
 
-  update() {
-    const viewBox = this.$element
-      .getAttribute('viewBox')
-      .split(' ')
-      .map(v => +v);
-    const newViewBox = this.plotter
-      .viewBoxFromRange(this.x[0], this.x[this.x.length - 1])
-      .split(' ')
-      .map(v => +v);
+  renderLables() {
+    const yRange = this.plotter.domain.y;
+    const delta = yRange[1] - yRange[0];
 
-    animateViewBox({
-      $svg: this.$element,
-      from: viewBox,
-      to: newViewBox,
-      duration: 400,
+    const step = Math.round(delta / numberOfLabels);
+
+    const lines = [];
+    const labels = [];
+
+    [...Array(numberOfLabels).keys()].forEach(index => {
+      const value = yRange[0] + index * step;
+      const y = this.plotter.toScreenY(value);
+
+      const line = createElement('hr', { style: { top: `${y}px` } });
+      const text = createElement('div', {
+        style: { top: `${y - textMargin}px` },
+      });
+
+      text.innerText = value;
+
+      lines.push(line);
+      labels.push(text);
+    });
+
+    return { lines, labels };
+  }
+
+  update() {
+    this.plotter.updateDomain();
+
+    const { labels, lines } = this.renderLables();
+    const distance = this.plotter.height / numberOfLabels;
+
+    this.labels.forEach($label => {
+      $label.style['transform'] = `translateY(-${distance}px)`;
+      $label.classList.toggle('hidden');
+
+      setTimeout(() => {
+        this.$element.removeChild($label);
+      }, 200);
+    });
+
+    this.lines.forEach($line => {
+      $line.style['transform'] = `translateY(${-distance}px)`;
+      $line.classList.toggle('hidden');
+
+      setTimeout(() => {
+        this.$element.removeChild($line);
+      }, 200);
+    });
+
+    this.labels = labels;
+    this.lines = lines;
+
+    this.labels.forEach($label => {
+      this.$element.appendChild($label);
+    });
+    this.lines.forEach($line => {
+      this.$element.appendChild($line);
     });
   }
 }
