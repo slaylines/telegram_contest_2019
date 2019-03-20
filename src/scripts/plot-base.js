@@ -27,7 +27,6 @@ class PlotBase {
       this.$paths[key] = createSvgElement('path', {
         d: this.plotter.getPathLine(key),
         stroke: color,
-        'vector-effect': 'non-scaling-stroke',
       });
 
       this.$element.appendChild(this.$paths[key]);
@@ -54,7 +53,7 @@ class PlotBase {
       $svg: this.$element,
       from: viewBox,
       to: newViewBox,
-      duration: 400,
+      duration: 200,
     });
   }
 }
