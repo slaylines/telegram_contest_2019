@@ -58,6 +58,22 @@ figure {
   }
 }
 
+.yaxis {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+
+  text {
+    font-weight: lighter;
+    fill: #999;
+  }
+
+  line {
+    stroke: #ddd;
+  }
+}
+
 .filter {
   display: flex;
   flex-wrap: wrap;

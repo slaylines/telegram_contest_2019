@@ -1,16 +1,9 @@
 import Plot from './plot';
+import YAxis from './yaxis';
 import Timeline from './timeline';
 import Filter from './filter';
 import { ChartType } from './constants';
-import {
-  createElement,
-  createSvgElement,
-  pairsToObject,
-  objectFilter,
-  objectMap,
-  min,
-  max,
-} from './utils';
+import { createElement, pairsToObject, objectFilter, objectMap } from './utils';
 
 const xKeyFromTypes = types =>
   Object.keys(objectFilter(types, (key, type) => type === ChartType.x))[0];
@@ -58,6 +51,11 @@ class Chart {
       graphs: this.graphs,
     });
 
+    this.yaxis = new YAxis({
+      x: this.x,
+      graphs: this.graphs,
+    });
+
     this.timeline = new Timeline({
       x: this.x,
       graphs: this.graphs,
@@ -69,6 +67,7 @@ class Chart {
     });
 
     this.plot.appendTo(this.$plot);
+    this.yaxis.appendTo(this.$plot);
     this.timeline.appendTo(this.$timeline);
     this.filter.appendTo(this.$filter);
   }
@@ -77,6 +76,7 @@ class Chart {
     this.graphs[key].visible = visible;
 
     this.plot.update();
+    this.yaxis.update();
     this.timeline.update();
   }
 }

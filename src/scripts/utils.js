@@ -29,8 +29,10 @@ export const createElement = (tag, { classes, style, ...options }) => {
   return element;
 };
 
-export const createSvgElement = (tag, options = {}) => {
+export const createSvgElement = (tag, { classes = '', ...options }) => {
   const element = document.createElementNS('http://www.w3.org/2000/svg', tag);
+
+  element.setAttribute('class', classes);
 
   objectForEach(options || {}, (key, value) =>
     element.setAttribute(key, value)
