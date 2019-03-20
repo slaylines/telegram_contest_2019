@@ -1,8 +1,6 @@
 import Plotter from './plotter';
 import { createElement, objectForEach, formatDate } from './utils';
 
-const margin = 40;
-
 class Legend {
   constructor({ x, graphs }) {
     this.x = x;
@@ -71,12 +69,6 @@ class Legend {
       }
     });
 
-    this.data.style['opacity'] = 1;
-    this.data.style['left'] = `${Math.min(
-      this.plotter.width - margin,
-      Math.max(xCoord, margin)
-    )}px`;
-
     let text = formatDate(x);
     text += '<div class="values">';
     objectForEach(this.graphs, (key, { color, values, visible }) => {
@@ -89,6 +81,14 @@ class Legend {
     text += '</div>';
 
     this.data.innerHTML = text;
+
+    this.data.style['opacity'] = 1;
+
+    const width = this.data.clientWidth;
+    this.data.style['left'] = `${Math.min(
+      this.plotter.width - width / 2,
+      Math.max(xCoord, width / 2)
+    )}px`;
   }
 
   onMouseLeave() {
