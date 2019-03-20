@@ -1,7 +1,6 @@
 import Plot from './plot';
 import Timeline from './timeline';
 import Filter from './filter';
-import Plotter from './plotter';
 import { ChartType } from './constants';
 import {
   createElement,
@@ -54,16 +53,12 @@ class Chart {
     this.$element.appendChild(this.$timeline);
     this.$element.appendChild(this.$filter);
 
-    this.plotter = new Plotter(this);
-
     this.plot = new Plot({
-      plotter: this.plotter,
       x: this.x,
       graphs: this.graphs,
     });
 
     this.timeline = new Timeline({
-      plotter: this.plotter,
       x: this.x,
       graphs: this.graphs,
     });
@@ -74,7 +69,7 @@ class Chart {
     });
 
     this.plot.appendTo(this.$plot);
-    // this.timeline.appendTo(this.$timeline);
+    this.timeline.appendTo(this.$timeline);
     this.filter.appendTo(this.$filter);
   }
 
@@ -82,6 +77,7 @@ class Chart {
     this.graphs[key].visible = visible;
 
     this.plot.update();
+    this.timeline.update();
   }
 }
 

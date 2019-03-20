@@ -7,9 +7,9 @@ import {
 } from './utils';
 
 class Plotter {
-  constructor({ $element, x, graphs }) {
-    this.width = $element.clientWidth;
-    this.height = $element.clientHeight;
+  constructor({ $container, x, graphs }) {
+    this.width = $container.clientWidth;
+    this.height = $container.clientHeight;
 
     this.x = x;
     this.graphs = graphs;

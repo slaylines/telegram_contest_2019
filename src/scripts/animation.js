@@ -1,33 +1,34 @@
-const FPS = 20;
-
 export const animateViewBox = ({ $svg, from, to, duration, callback }) => {
-  let step = 1;
-  const steps = (duration / 1000) * FPS;
+  let start;
 
   const [xminFrom, yminFrom, xmaxFrom, ymaxFrom] = from;
   const [xminTo, yminTo, xmaxTo, ymaxTo] = to;
 
-  const xminStep = (xminTo - xminFrom) / steps;
-  const yminStep = (yminTo - yminFrom) / steps;
-  const xmaxStep = (xmaxTo - xmaxFrom) / steps;
-  const ymaxStep = (ymaxTo - ymaxFrom) / steps;
+  const xminDelta = xminTo - xminFrom;
+  const yminDelta = yminTo - yminFrom;
+  const xmaxDelta = xmaxTo - xmaxFrom;
+  const ymaxDelta = ymaxTo - ymaxFrom;
 
-  const animateStep = () => {
-    if (step < steps) {
-      step += 1;
+  const animateStep = now => {
+    if (!start) start = now;
 
-      const xmin = xminFrom + xminStep * step;
-      const ymin = yminFrom + yminStep * step;
-      const xmax = xmaxFrom + xmaxStep * step;
-      const ymax = ymaxFrom + ymaxStep * step;
+    const progress = Math.min((now - start) / duration, 1);
 
-      $svg.setAttribute('viewBox', `${xmin} ${ymin} ${xmax} ${ymax}`);
+    const xmin = xminFrom + xminDelta * progress;
+    const ymin = yminFrom + yminDelta * progress;
+    const xmax = xmaxFrom + xmaxDelta * progress;
+    const ymax = ymaxFrom + ymaxDelta * progress;
 
-      requestAnimationFrame(animateStep);
+    $svg.setAttribute('viewBox', `${xmin} ${ymin} ${xmax} ${ymax}`);
+
+    if (progress < 1) {
+      $svg.animation = requestAnimationFrame(animateStep);
     } else if (callback) {
       callback();
     }
   };
 
-  requestAnimationFrame(animateStep);
+  cancelAnimationFrame($svg.animation);
+
+  $svg.animation = requestAnimationFrame(animateStep);
 };

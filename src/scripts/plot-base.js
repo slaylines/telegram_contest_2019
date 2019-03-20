@@ -1,15 +1,16 @@
+import Plotter from './plotter';
 import { animateViewBox } from './animation';
 import { createSvgElement, objectForEach } from './utils';
 
 class PlotBase {
-  constructor({ plotter, x, graphs }) {
+  constructor({ x, graphs }) {
     this.x = x;
     this.graphs = graphs;
-    this.plotter = plotter;
   }
 
   appendTo($container) {
     this.$container = $container;
+    this.plotter = new Plotter(this);
     this.render();
   }
 
@@ -53,7 +54,7 @@ class PlotBase {
       $svg: this.$element,
       from: viewBox,
       to: newViewBox,
-      duration: 600,
+      duration: 400,
     });
   }
 }
