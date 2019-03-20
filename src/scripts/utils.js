@@ -16,7 +16,7 @@ export const closestRightIndexOf = (array, value) =>
       (array[index - 1] < value && value < array[index])
   );
 
-export const createElement = (tag, { classes, style, ...options }) => {
+export const createElement = (tag, { classes = '', style, ...options }) => {
   const element = document.createElement(tag);
 
   element.className = classes;

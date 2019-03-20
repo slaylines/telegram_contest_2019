@@ -38,6 +38,10 @@ class Chart {
     this.$element = document.createElement('figure');
     this.$container.appendChild(this.$element);
 
+    const $title = createElement('h1', {});
+    $title.innerText = this.name;
+    this.$element.appendChild($title);
+
     this.$plot = createElement('section', { classes: 'plot' });
     this.$timeline = createElement('section', { classes: 'timeline' });
     this.$filter = createElement('section', { classes: 'filter' });
