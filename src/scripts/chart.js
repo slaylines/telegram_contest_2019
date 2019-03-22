@@ -1,8 +1,6 @@
 import Plot from './plot';
-import YAxis from './yaxis';
 import Timeline from './timeline';
 import Filter from './filter';
-import Legend from './legend';
 import { ChartType } from './constants';
 import { createElement, pairsToObject, objectFilter, objectMap } from './utils';
 
@@ -39,48 +37,52 @@ class Chart {
     this.$element = document.createElement('figure');
     this.$container.appendChild(this.$element);
 
-    const $title = createElement('h1', {});
-    $title.innerText = this.name;
-    this.$element.appendChild($title);
+    this.renderTitle();
+    this.renderPlot();
+    this.renderTimeline();
+    this.renderFilter();
+  }
 
+  renderTitle() {
+    this.$title = createElement('h1');
+    this.$title.innerText = this.name;
+    this.$element.appendChild(this.$title);
+  }
+
+  renderPlot() {
     this.$plot = createElement('section', { classes: 'plot' });
-    this.$timeline = createElement('section', { classes: 'timeline' });
-    this.$filter = createElement('section', { classes: 'filter' });
-
     this.$element.appendChild(this.$plot);
-    this.$element.appendChild(this.$timeline);
-    this.$element.appendChild(this.$filter);
 
     this.plot = new Plot({
       x: this.x,
       graphs: this.graphs,
     });
 
-    this.yaxis = new YAxis({
-      x: this.x,
-      graphs: this.graphs,
-    });
+    this.plot.appendTo(this.$plot);
+  }
+
+  renderTimeline() {
+    this.$timeline = createElement('section', { classes: 'timeline' });
+    this.$element.appendChild(this.$timeline);
 
     this.timeline = new Timeline({
       x: this.x,
       graphs: this.graphs,
-      onUpdate: this.onUpdate.bind(this),
+      onTimelineChange: this.onTimelineChange.bind(this),
     });
+
+    this.timeline.appendTo(this.$timeline);
+  }
+
+  renderFilter() {
+    this.$filter = createElement('section', { classes: 'filter' });
+    this.$element.appendChild(this.$filter);
 
     this.filter = new Filter({
       graphs: this.graphs,
       onFilterToggle: this.onFilterToggle.bind(this),
     });
 
-    this.legend = new Legend({
-      x: this.x,
-      graphs: this.graphs,
-    });
-
-    this.plot.appendTo(this.$plot);
-    this.yaxis.appendTo(this.$plot);
-    this.legend.appendTo(this.$plot);
-    this.timeline.appendTo(this.$timeline);
     this.filter.appendTo(this.$filter);
   }
 
@@ -88,11 +90,10 @@ class Chart {
     this.graphs[key].visible = visible;
 
     this.plot.update();
-    this.yaxis.update();
     this.timeline.update();
   }
 
-  onUpdate(screen) {
+  onTimelineChange(screen) {
     this.plot.updateViewport(screen);
   }
 }

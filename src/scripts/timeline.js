@@ -4,9 +4,9 @@ import { createSvgElement } from './utils';
 const selectionLineSize = 8;
 
 class Timeline extends PlotBase {
-  constructor({ x, graphs, onUpdate }) {
+  constructor({ x, graphs, onTimelineChange }) {
     super({ x, graphs });
-    this.onUpdate = onUpdate;
+    this.onTimelineChange = onTimelineChange;
   }
 
   renderSelection() {
@@ -322,7 +322,7 @@ class Timeline extends PlotBase {
 
     this.mouseX = event.x;
 
-    this.onUpdate([
+    this.onTimelineChange([
       this.selection.leftSelector.value,
       this.selection.rightSelector.value,
     ]);
