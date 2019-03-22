@@ -1,5 +1,5 @@
 import PlotBase from './plot-base';
-import { createSvgElement } from './utils';
+import { createElement } from './utils';
 
 const selectionLineSize = 8;
 
@@ -13,7 +13,7 @@ class Timeline extends PlotBase {
     const xMin = 0;
     const xMax = this.plotter.width;
 
-    const graphics = createSvgElement('g', { classes: 'selection' });
+    const $selection = createElement('div', { classes: 'selection' });
 
     this.selection = {};
 
@@ -22,14 +22,14 @@ class Timeline extends PlotBase {
     this.selection.leftSelector.value = xMin;
     this.selection.leftSelector.x = Math.max(xMin - selectionLineSize, 0);
     this.selection.leftSelector.width = selectionLineSize;
-    this.selection.leftSelector.element = createSvgElement('rect', {
+    this.selection.leftSelector.element = createElement('div', {
       classes: 'selector',
-      x: this.selection.leftSelector.x,
-      y: 0,
-      width: this.selection.leftSelector.width,
-      height: this.plotter.height,
+      style: {
+        left: `${this.selection.leftSelector.x}px`,
+        width: `${this.selection.leftSelector.width}px`,
+      },
     });
-    graphics.appendChild(this.selection.leftSelector.element);
+    $selection.appendChild(this.selection.leftSelector.element);
 
     // right selection bar
     this.selection.rightSelector = {};
@@ -39,41 +39,41 @@ class Timeline extends PlotBase {
       this.plotter.width
     );
     this.selection.rightSelector.width = selectionLineSize;
-    this.selection.rightSelector.element = createSvgElement('rect', {
+    this.selection.rightSelector.element = createElement('div', {
       classes: 'selector',
-      x: this.selection.rightSelector.x,
-      y: 0,
-      width: this.selection.rightSelector.width,
-      height: this.plotter.height,
+      style: {
+        left: `${this.selection.rightSelector.x}px`,
+        width: `${this.selection.rightSelector.width}px`,
+      },
     });
-    graphics.appendChild(this.selection.rightSelector.element);
+    $selection.appendChild(this.selection.rightSelector.element);
 
     // border of selected area
     this.selection.areaSelector = {};
     this.selection.areaSelector.x =
-      this.selection.leftSelector.x + this.selection.leftSelector.width + 1;
+      this.selection.leftSelector.x + this.selection.leftSelector.width;
     this.selection.areaSelector.width =
-      this.selection.rightSelector.x - this.selection.areaSelector.x - 1;
-    this.selection.areaSelector.element = createSvgElement('rect', {
+      this.selection.rightSelector.x - this.selection.areaSelector.x;
+    this.selection.areaSelector.element = createElement('div', {
       classes: 'area',
-      x: this.selection.areaSelector.x,
-      y: 0,
-      width: this.selection.areaSelector.width,
-      height: this.plotter.height,
+      style: {
+        left: `${this.selection.areaSelector.x}px`,
+        width: `${this.selection.areaSelector.width}px`,
+      },
     });
-    graphics.appendChild(this.selection.areaSelector.element);
+    $selection.appendChild(this.selection.areaSelector.element);
 
     // left background rect for not selected area
     this.selection.leftBackground = {};
     this.selection.leftBackground.width = this.selection.leftSelector.x;
-    this.selection.leftBackground.element = createSvgElement('rect', {
+    this.selection.leftBackground.element = createElement('div', {
       classes: 'background',
-      x: 0,
-      y: 0,
-      width: this.selection.leftBackground.width,
-      height: this.plotter.height,
+      style: {
+        left: 0,
+        width: `${this.selection.leftBackground.width}px`,
+      },
     });
-    graphics.appendChild(this.selection.leftBackground.element);
+    $selection.appendChild(this.selection.leftBackground.element);
 
     // right background rect for not selected area
     this.selection.rightBackground = {};
@@ -83,14 +83,14 @@ class Timeline extends PlotBase {
       this.plotter.width - this.selection.rightBackground.x,
       0
     );
-    this.selection.rightBackground.element = createSvgElement('rect', {
+    this.selection.rightBackground.element = createElement('div', {
       classes: 'background',
-      x: this.selection.rightBackground.x,
-      y: 0,
-      width: this.selection.rightBackground.width,
-      height: this.plotter.height,
+      style: {
+        left: `${this.selection.rightBackground.x}px`,
+        width: `${this.selection.rightBackground.width}px`,
+      },
     });
-    graphics.appendChild(this.selection.rightBackground.element);
+    $selection.appendChild(this.selection.rightBackground.element);
 
     this.$container.addEventListener('mousemove', event => {
       this.onDrag(event);
@@ -132,7 +132,7 @@ class Timeline extends PlotBase {
       this.onStopDrag();
     });
 
-    this.$element.appendChild(graphics);
+    this.$container.appendChild($selection);
   }
 
   render() {
@@ -186,18 +186,15 @@ class Timeline extends PlotBase {
       this.selection.leftSelector.value += delta;
       this.selection.rightSelector.value += delta;
 
-      this.selection.areaSelector.element.setAttribute(
-        'x',
+      this.selection.areaSelector.element.style['left'] = `${
         this.selection.areaSelector.x
-      );
-      this.selection.leftSelector.element.setAttribute(
-        'x',
+      }px`;
+      this.selection.leftSelector.element.style['left'] = `${
         this.selection.leftSelector.x
-      );
-      this.selection.rightSelector.element.setAttribute(
-        'x',
+      }px`;
+      this.selection.rightSelector.element.style['left'] = `${
         this.selection.rightSelector.x
-      );
+      }px`;
 
       this.selection.leftBackground.width += delta;
       this.selection.rightBackground.x += delta;
@@ -206,18 +203,15 @@ class Timeline extends PlotBase {
         0
       );
 
-      this.selection.leftBackground.element.setAttribute(
-        'width',
+      this.selection.leftBackground.element.style['width'] = `${
         this.selection.leftBackground.width
-      );
-      this.selection.rightBackground.element.setAttribute(
-        'x',
+      }px`;
+      this.selection.rightBackground.element.style['left'] = `${
         this.selection.rightBackground.x
-      );
-      this.selection.rightBackground.element.setAttribute(
-        'width',
+      }px`;
+      this.selection.rightBackground.element.style['width'] = `${
         this.selection.rightBackground.width
-      );
+      }px`;
     }
 
     if (this.dragLeft) {
@@ -246,24 +240,20 @@ class Timeline extends PlotBase {
       this.selection.areaSelector.x += delta;
       this.selection.areaSelector.width -= delta;
 
-      this.selection.leftSelector.element.setAttribute(
-        'x',
+      this.selection.leftSelector.element.style['left'] = `${
         this.selection.leftSelector.x
-      );
-      this.selection.areaSelector.element.setAttribute(
-        'x',
+      }px`;
+      this.selection.areaSelector.element.style['left'] = `${
         this.selection.areaSelector.x
-      );
-      this.selection.areaSelector.element.setAttribute(
-        'width',
+      }px`;
+      this.selection.areaSelector.element.style['width'] = `${
         this.selection.areaSelector.width
-      );
+      }px`;
 
       this.selection.leftBackground.width += delta;
-      this.selection.leftBackground.element.setAttribute(
-        'width',
+      this.selection.leftBackground.element.style['width'] = `${
         this.selection.leftBackground.width
-      );
+      }px`;
     }
 
     if (this.dragRight) {
@@ -299,25 +289,21 @@ class Timeline extends PlotBase {
       this.selection.rightSelector.value += delta;
       this.selection.areaSelector.width += delta;
 
-      this.selection.rightSelector.element.setAttribute(
-        'x',
+      this.selection.rightSelector.element.style['left'] = `${
         this.selection.rightSelector.x
-      );
-      this.selection.areaSelector.element.setAttribute(
-        'width',
+      }px`;
+      this.selection.areaSelector.element.style['width'] = `${
         this.selection.areaSelector.width
-      );
+      }px`;
 
       this.selection.rightBackground.x += delta;
       this.selection.rightBackground.width -= delta;
-      this.selection.rightBackground.element.setAttribute(
-        'x',
+      this.selection.rightBackground.element.style['left'] = `${
         this.selection.rightBackground.x
-      );
-      this.selection.rightBackground.element.setAttribute(
-        'width',
+      }px`;
+      this.selection.rightBackground.element.style['width'] = `${
         this.selection.rightBackground.width
-      );
+      }px`;
     }
 
     this.mouseX = event.x;
