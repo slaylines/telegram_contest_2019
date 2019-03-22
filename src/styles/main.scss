@@ -43,6 +43,7 @@ svg {
     fill: none;
     opacity: 1;
     transition: opacity 200ms ease-in-out;
+    vector-effect: non-scaling-stroke;
 
     &.hidden {
       opacity: 0;
