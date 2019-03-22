@@ -64,6 +64,7 @@ class Chart {
     this.timeline = new Timeline({
       x: this.x,
       graphs: this.graphs,
+      onUpdate: this.onUpdate.bind(this),
     });
 
     this.filter = new Filter({
@@ -89,6 +90,10 @@ class Chart {
     this.plot.update();
     this.yaxis.update();
     this.timeline.update();
+  }
+
+  onUpdate(screen) {
+    this.plot.updateViewport(screen);
   }
 }
 
