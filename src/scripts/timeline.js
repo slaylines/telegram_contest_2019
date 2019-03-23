@@ -1,12 +1,14 @@
 import PlotBase from './plot-base';
-import { createElement } from './utils';
+import { createElement, debounce } from './utils';
 
 const selectionLineSize = 8;
 
 class Timeline extends PlotBase {
   constructor({ x, graphs, onTimelineChange }) {
     super({ x, graphs });
+
     this.onTimelineChange = onTimelineChange;
+    this.onDrag = debounce(this.onDrag, this);
   }
 
   renderSelection() {
@@ -92,9 +94,8 @@ class Timeline extends PlotBase {
     });
     $selection.appendChild(this.selection.rightBackground.element);
 
-    this.$container.addEventListener('mousemove', event => {
-      this.onDrag(event);
-    });
+    this.$container.addEventListener('mousemove', this.onDrag);
+
     document.addEventListener('mouseup', () => {
       this.dragArea = false;
       this.dragLeft = false;

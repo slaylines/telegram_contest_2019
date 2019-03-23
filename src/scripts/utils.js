@@ -18,6 +18,11 @@ export const min = array => Math.min.apply(null, array);
 
 export const max = array => Math.max.apply(null, array);
 
+export const viewBoxToArray = viewBox =>
+  viewBox.split(' ').map(value => +value);
+
+export const arrayToViewBox = array => array.join(' ');
+
 export const closestLeftIndexOf = (array, value) =>
   array.findIndex(
     (_, index) =>
@@ -80,4 +85,15 @@ export const formatDate = timestamp => {
   return `${days[date.getUTCDay()]}, ${
     months[date.getUTCMonth()]
   } ${date.getUTCDate()}`;
+};
+
+export const debounce = (func, context) => {
+  let timeout;
+
+  return (...args) => {
+    if (timeout) cancelAnimationFrame(timeout);
+    timeout = requestAnimationFrame(() => {
+      func.call(context, ...args);
+    });
+  };
 };
