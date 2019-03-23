@@ -14,9 +14,9 @@ const months = [
 ];
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export const min = array => Math.min.apply(null, array);
+export const min = array => Math.min(...array);
 
-export const max = array => Math.max.apply(null, array);
+export const max = array => Math.max(...array);
 
 export const viewBoxToArray = viewBox =>
   viewBox.split(' ').map(value => +value);
