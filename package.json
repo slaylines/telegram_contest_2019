@@ -10,7 +10,9 @@
     "prebuild": "rm -rf dist",
     "build": "parcel build src/index.pug",
     "postbuild": "NODE_ENV=production rollup -c",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "deploy": "yarn build && yarn copy",
+    "copy": "source .env && rsync -qazP $DEPLOY_FILES $DEPLOY_TARGET"
   },
   "husky": {
     "hooks": {
@@ -24,6 +26,7 @@
     ]
   },
   "devDependencies": {
+    "@ganemone/dotenv-cli": "^0.0.2",
     "eslint": "^5.15.1",
     "eslint-config-prettier": "^4.1.0",
     "glob": "^7.1.3",

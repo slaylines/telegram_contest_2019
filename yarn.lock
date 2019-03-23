@@ -645,6 +645,13 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
+"@ganemone/dotenv-cli@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@ganemone/dotenv-cli/-/dotenv-cli-0.0.2.tgz#e8a44ed6d72592cbecb7e268cf48b8b81e3cb6bd"
+  integrity sha1-6KRO1tclksvst+Joz0i4uB48tr0=
+  dependencies:
+    dotenv "^4.0.0"
+
 "@iarna/toml@^2.2.0":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.3.tgz#f060bf6eaafae4d56a7dac618980838b0696e2ab"
@@ -2068,6 +2075,11 @@ dotenv-expand@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-4.2.0.tgz#def1f1ca5d6059d24a766e587942c21106ce1275"
   integrity sha1-3vHxyl1gWdJKdm5YeULCEQbOEnU=
+
+dotenv@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
+  integrity sha1-hk7xN5rO1Vzm+V3r7NzhefegzR0=
 
 dotenv@^5.0.0:
   version "5.0.1"
