@@ -79,13 +79,15 @@ export const formatDate = timestamp => {
   } ${date.getUTCDate()}`;
 };
 
-export const debounce = (func, context) => {
+export const debounce = (func, context, delay = 0) => {
   let timeout;
 
   return (...args) => {
-    if (timeout) cancelAnimationFrame(timeout);
-    timeout = requestAnimationFrame(() => {
-      func.call(context, ...args);
-    });
+    if (timeout) clearTimeout(timeout);
+
+    timeout = setTimeout(
+      () => requestAnimationFrame(func.bind(context, ...args)),
+      delay
+    );
   };
 };

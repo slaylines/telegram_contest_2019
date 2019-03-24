@@ -65,6 +65,13 @@ class Plotter {
     return dx[0] + ((v - sx[0]) / (sx[1] - sx[0])) * (dx[1] - dx[0]);
   }
 
+  toDomainY(v, isCurrent = false) {
+    const dy = (isCurrent ? this.current : this.domain).y;
+    const sy = this.screen.y;
+
+    return dy[1] - dy[0] - ((v - sy[0]) / (sy[1] - sy[0])) * (dy[1] - dy[0]);
+  }
+
   /**
    * For initial PlotBase rendering.
    */

@@ -26,7 +26,6 @@ figure {
   padding: 0;
 
   h1 {
-    margin: 0;
     font-weight: normal;
   }
 }
@@ -81,6 +80,7 @@ rect {
     z-index: 1;
     width: 100%;
     height: 100%;
+    user-select: none;
 
     div {
       position: absolute;

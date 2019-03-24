@@ -1,13 +1,15 @@
-import { createElement } from './utils';
+import { createElement, debounce } from './utils';
 
-const numberOfLabels = 5;
+const numberOfLabels = 6;
 const textMargin = 4;
+const topMargin = 20;
 
 class YAxis {
   constructor({ x, graphs, plotter }) {
     this.x = x;
     this.graphs = graphs;
     this.plotter = plotter;
+    this.update = debounce(this.update, this, 200);
   }
 
   appendTo($container) {
@@ -33,17 +35,16 @@ class YAxis {
   }
 
   renderLables() {
-    const yRange = this.plotter.domain.y;
-    const delta = yRange[1] - yRange[0];
-
-    const step = Math.round(delta / numberOfLabels);
+    const [ymin, ymax] = this.plotter.screen.y;
+    const delta = ymax - topMargin - ymin;
+    const step = delta / (numberOfLabels - 1);
 
     const lines = [];
     const labels = [];
 
-    [...Array(numberOfLabels).keys()].forEach(index => {
-      const value = yRange[0] + index * step;
-      const y = this.plotter.toScreenY(value);
+    for (let index = 0; index < numberOfLabels; ++index) {
+      const y = ymin + topMargin + index * step;
+      const value = Math.round(this.plotter.toDomainY(y, true));
 
       const line = createElement('hr', { style: { top: `${y}px` } });
       const text = createElement('div', {
@@ -54,7 +55,7 @@ class YAxis {
 
       lines.push(line);
       labels.push(text);
-    });
+    }
 
     return { lines, labels };
   }
