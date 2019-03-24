@@ -5,10 +5,11 @@ const barSize = 8;
 const minDiff = 30;
 
 class Timeline extends PlotBase {
-  constructor({ x, graphs, onTimelineChange }) {
+  constructor({ x, graphs, onTimelineChange, onTimelineEnd }) {
     super({ x, graphs });
 
     this.onTimelineChange = onTimelineChange;
+    this.onTimelineEnd = onTimelineEnd;
     this.onDrag = debounce(this.onDrag, this);
   }
 
@@ -29,9 +30,12 @@ class Timeline extends PlotBase {
     this.$container.addEventListener('mousemove', this.onDrag);
 
     document.addEventListener('mouseup', () => {
+      if (!this.dragArea && !this.dragLeft && !this.dragRight) return;
+
       this.dragArea = false;
       this.dragLeft = false;
       this.dragRight = false;
+      this.area.$element.classList.toggle('dragging', false);
       this.onStopDrag();
     });
 
@@ -61,11 +65,6 @@ class Timeline extends PlotBase {
       this.dragLeft = true;
       this.onStartDrag(event);
     });
-
-    this.leftBar.$element.addEventListener('mouseup', () => {
-      this.dragLeft = false;
-      this.onStopDrag();
-    });
   }
 
   renderRightBar() {
@@ -91,11 +90,6 @@ class Timeline extends PlotBase {
       this.dragRight = true;
       this.onStartDrag(event);
     });
-
-    this.rightBar.$element.addEventListener('mouseup', () => {
-      this.dragRight = false;
-      this.onStopDrag();
-    });
   }
 
   renderArea() {
@@ -118,12 +112,6 @@ class Timeline extends PlotBase {
       this.dragArea = true;
       this.area.$element.classList.toggle('dragging', true);
       this.onStartDrag(event);
-    });
-
-    this.area.$element.addEventListener('mouseup', () => {
-      this.dragArea = false;
-      this.area.$element.classList.toggle('dragging', false);
-      this.onStopDrag();
     });
   }
 
@@ -166,6 +154,7 @@ class Timeline extends PlotBase {
   }
 
   onStartDrag(event) {
+    this.startDomain = Object.assign({}, this.plotter.previous);
     this.startMouseX = event.x;
     this.mouseX = event.x;
   }
@@ -173,6 +162,7 @@ class Timeline extends PlotBase {
   onStopDrag() {
     this.startMouseX = null;
     this.mouseX = null;
+    this.onTimelineEnd(this.startDomain);
   }
 
   onDrag(event) {

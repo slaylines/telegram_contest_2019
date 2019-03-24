@@ -69,6 +69,7 @@ class Chart {
       x: this.x,
       graphs: this.graphs,
       onTimelineChange: this.onTimelineChange.bind(this),
+      onTimelineEnd: this.onTimelineEnd.bind(this),
     });
 
     this.timeline.appendTo(this.$timeline);
@@ -95,6 +96,10 @@ class Chart {
 
   onTimelineChange(left, right) {
     this.plot.updateViewport(left, right);
+  }
+
+  onTimelineEnd(startDomain) {
+    this.plot.updateYAxis(startDomain);
   }
 }
 

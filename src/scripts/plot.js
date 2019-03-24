@@ -22,6 +22,10 @@ class Plot extends PlotBase {
     this.legend.appendTo(this.$container);
   }
 
+  updateYAxis(startDomain) {
+    this.yaxis.update(startDomain);
+  }
+
   update() {
     super.update();
 
@@ -31,7 +35,6 @@ class Plot extends PlotBase {
   updateViewport(left, right) {
     this.plotter.setRatios(left, right);
     this.$element.setAttribute('viewBox', this.plotter.viewBoxFromRatios());
-    this.yaxis.update();
   }
 }
 

@@ -20,6 +20,7 @@ class Plotter {
     this.right = 1;
     this.domain = this.domainFromRatios();
     this.current = Object.assign({}, this.domain);
+    this.previous = Object.assign({}, this.domain);
 
     this.$svg.setAttribute('width', width);
     this.$svg.setAttribute('height', height);
@@ -37,18 +38,32 @@ class Plotter {
    * Conversion between coordinate systems.
    */
 
-  toScreenX(v, isCurrent = false) {
-    const dx = (isCurrent ? this.current : this.domain).x;
+  toScreenX(v, domain = this.domain) {
+    const dx = domain.x;
     const sx = this.screen.x;
 
     return sx[0] + ((v - dx[0]) / (dx[1] - dx[0])) * (sx[1] - sx[0]);
   }
 
-  toScreenY(v, isCurrent = false) {
-    const dy = (isCurrent ? this.current : this.domain).y;
+  toScreenY(v, domain = this.domain) {
+    const dy = domain.y;
     const sy = this.screen.y;
 
     return sy[1] - sy[0] - ((v - dy[0]) / (dy[1] - dy[0])) * (sy[1] - sy[0]);
+  }
+
+  toCurrentScreenX(v) {
+    return this.toScreenX(v, this.current);
+  }
+  toCurrentScreenY(v) {
+    return this.toScreenY(v, this.current);
+  }
+
+  toPreviousScreenX(v) {
+    return this.toScreenX(v, this.previous);
+  }
+  toPreviousScreenY(v) {
+    return this.toScreenY(v, this.previous);
   }
 
   toScreen(d) {
@@ -58,18 +73,32 @@ class Plotter {
     };
   }
 
-  toDomainX(v, isCurrent = false) {
-    const dx = (isCurrent ? this.current : this.domain).x;
+  toDomainX(v, domain = this.domain) {
+    const dx = domain.x;
     const sx = this.screen.x;
 
     return dx[0] + ((v - sx[0]) / (sx[1] - sx[0])) * (dx[1] - dx[0]);
   }
 
-  toDomainY(v, isCurrent = false) {
-    const dy = (isCurrent ? this.current : this.domain).y;
+  toDomainY(v, domain = this.domain) {
+    const dy = domain.y;
     const sy = this.screen.y;
 
     return dy[1] - dy[0] - ((v - sy[0]) / (sy[1] - sy[0])) * (dy[1] - dy[0]);
+  }
+
+  toCurrentDomainX(v) {
+    return this.toDomainX(v, this.current);
+  }
+  toCurrentDomainY(v) {
+    return this.toDomainY(v, this.current);
+  }
+
+  toPreviousDomainX(v) {
+    return this.toDomainX(v, this.previous);
+  }
+  toPreviousDomainY(v) {
+    return this.toDomainY(v, this.previous);
   }
 
   /**
@@ -128,6 +157,7 @@ class Plotter {
   }
 
   updateDomain() {
+    this.previous = Object.assign({}, this.current);
     this.current = this.domainFromRatios();
   }
 }

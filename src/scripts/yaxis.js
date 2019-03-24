@@ -1,7 +1,6 @@
-import { createElement, debounce } from './utils';
+import { createElement } from './utils';
 
 const numberOfLabels = 6;
-const textMargin = 4;
 const topMargin = 20;
 
 class YAxis {
@@ -9,7 +8,6 @@ class YAxis {
     this.x = x;
     this.graphs = graphs;
     this.plotter = plotter;
-    this.update = debounce(this.update, this, 200);
   }
 
   appendTo($container) {
@@ -19,77 +17,78 @@ class YAxis {
 
   render() {
     this.$element = createElement('div', { classes: 'yaxis' });
+    this.$labels = [];
 
-    const { lines, labels } = this.renderLables();
-    this.lines = lines;
-    this.labels = labels;
-
-    this.labels.forEach($label => {
-      this.$element.appendChild($label);
-    });
-    this.lines.forEach($line => {
-      this.$element.appendChild($line);
-    });
+    this.renderLabels();
 
     this.$container.appendChild(this.$element);
   }
 
-  renderLables() {
+  renderLabels() {
     const [ymin, ymax] = this.plotter.screen.y;
     const delta = ymax - topMargin - ymin;
     const step = delta / (numberOfLabels - 1);
 
-    const lines = [];
-    const labels = [];
-
     for (let index = 0; index < numberOfLabels; ++index) {
       const y = ymin + topMargin + index * step;
-      const value = Math.round(this.plotter.toDomainY(y, true));
+      const value = Math.round(this.plotter.toCurrentDomainY(y));
 
-      const line = createElement('hr', { style: { top: `${y}px` } });
-      const text = createElement('div', {
-        style: { top: `${y - textMargin}px` },
+      const $label = createElement('div', {
+        classes: 'label',
+        style: { top: `${y}px` },
       });
 
-      text.innerText = value;
+      const $line = createElement('hr', { classes: 'label-line' });
+      const $text = createElement('span', { classes: 'label-text' });
 
-      lines.push(line);
-      labels.push(text);
+      $text.innerText = value;
+
+      $label.appendChild($text);
+      $label.appendChild($line);
+
+      const $altLabel = $label.cloneNode(true);
+
+      $altLabel.classList.add('hidden');
+
+      $label.y = y;
+      $label.$text = $label.querySelector('.label-text');
+
+      $altLabel.y = y;
+      $altLabel.$text = $altLabel.querySelector('.label-text');
+
+      this.$labels.push($label);
+      this.$labels.push($altLabel);
+
+      this.$element.appendChild($label);
+      this.$element.appendChild($altLabel);
     }
-
-    return { lines, labels };
   }
 
-  update() {
-    const { labels, lines } = this.renderLables();
-    const distance = this.plotter.height / numberOfLabels;
+  update(startDomain = this.plotter.previous) {
+    this.$labels.forEach($label => {
+      const hidden = $label.classList.contains('hidden');
 
-    this.labels.forEach($label => {
-      $label.style['transform'] = `translateY(-${distance}px)`;
-      $label.classList.toggle('hidden');
+      if (hidden) {
+        const to = $label.y;
+        const value = this.plotter.toCurrentDomainY(to);
+        const from = this.plotter.toScreenY(value, startDomain);
+        const text = Math.round(value);
 
-      setTimeout(() => {
-        this.$element.removeChild($label);
-      }, 200);
-    });
+        $label.$text.innerText = text;
 
-    this.lines.forEach($line => {
-      $line.style['transform'] = `translateY(${-distance}px)`;
-      $line.classList.toggle('hidden');
+        // TODO: Set initial position without animation.
+        //       The animation works even if the domain doesn't change.
+        $label.style['transform'] = `translateY(${to - from}px)`;
+        $label.classList.remove('hidden');
+        $label.style['transform'] = 'translateY(0)';
+      } else {
+        const from = $label.y;
+        const value = this.plotter.toDomainY(from, startDomain);
+        const to = this.plotter.toCurrentScreenY(value);
 
-      setTimeout(() => {
-        this.$element.removeChild($line);
-      }, 200);
-    });
-
-    this.labels = labels;
-    this.lines = lines;
-
-    this.labels.forEach($label => {
-      this.$element.appendChild($label);
-    });
-    this.lines.forEach($line => {
-      this.$element.appendChild($line);
+        $label.classList.add('hidden');
+        $label.style['transform'] = `translateY(${to - from}px)`;
+      }
     });
   }
 }

@@ -42,7 +42,7 @@ class Legend {
   }
 
   onMouseMove(event) {
-    const dateTime = this.plotter.toDomainX(event.offsetX, true);
+    const dateTime = this.plotter.toCurrentDomainX(event.offsetX);
 
     const position = this.x.reduce((prev, value, i, array) => {
       return Math.abs(value - dateTime) < Math.abs(array[prev] - dateTime)
@@ -51,14 +51,14 @@ class Legend {
     }, 0);
 
     const x = this.x[position];
-    const xCoord = this.plotter.toScreenX(x, true);
+    const xCoord = this.plotter.toCurrentScreenX(x);
 
     this.line.style['left'] = `${xCoord}px`;
     this.line.style['opacity'] = 1;
 
     objectForEach(this.graphs, (key, { values, visible }) => {
       if (visible) {
-        const yCoord = this.plotter.toScreenY(values[position], true);
+        const yCoord = this.plotter.toCurrentScreenY(values[position]);
         this.circles[key].style['left'] = `${xCoord}px`;
         this.circles[key].style['top'] = `${yCoord}px`;
         this.circles[key].style['opacity'] = 1;

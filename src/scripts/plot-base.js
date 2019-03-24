@@ -1,6 +1,7 @@
 import Plotter from './plotter';
 import { animateViewBox } from './animation';
 import { createSvgElement, objectForEach } from './utils';
+import { BaseAnimationDuration } from './constants';
 
 class PlotBase {
   constructor({ x, graphs }) {
@@ -50,7 +51,7 @@ class PlotBase {
     animateViewBox({
       $svg: this.$element,
       to: this.plotter.viewBoxFromRatios(),
-      duration: 200,
+      duration: BaseAnimationDuration,
     });
   }
 }
