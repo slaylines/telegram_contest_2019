@@ -91,12 +91,18 @@ rect {
     .selector {
       background: #999;
       opacity: 0.4;
+      cursor: col-resize;
     }
 
     .area {
       background: rgba(0, 0, 0, 0);
       border: 1px solid #999;
       opacity: 0.4;
+      cursor: grab;
+
+      &.dragging {
+        cursor: grabbing;
+      }
     }
 
     .background {

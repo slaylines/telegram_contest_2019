@@ -28,13 +28,9 @@ class Plot extends PlotBase {
     this.yaxis.update();
   }
 
-  updateViewport(screen) {
-    const viewBox = this.plotter.viewBoxFromRange(
-      this.plotter.toDomainX(screen[0]),
-      this.plotter.toDomainX(screen[1])
-    );
-
-    this.$element.setAttribute('viewBox', viewBox);
+  updateViewport(left, right) {
+    this.plotter.setRatios(left, right);
+    this.$element.setAttribute('viewBox', this.plotter.viewBoxFromRatios());
   }
 }
 

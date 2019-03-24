@@ -1,8 +1,11 @@
-export const animateViewBox = ({ $svg, from, to, duration, callback }) => {
+import { viewBoxToArray } from './utils';
+
+export const animateViewBox = ({ $svg, to, duration, callback }) => {
   let start;
 
-  const [xminFrom, yminFrom, xmaxFrom, ymaxFrom] = from;
-  const [xminTo, yminTo, xmaxTo, ymaxTo] = to;
+  const from = $svg.getAttribute('viewBox');
+  const [xminFrom, yminFrom, xmaxFrom, ymaxFrom] = viewBoxToArray(from);
+  const [xminTo, yminTo, xmaxTo, ymaxTo] = viewBoxToArray(to);
 
   const xminDelta = xminTo - xminFrom;
   const yminDelta = yminTo - yminFrom;

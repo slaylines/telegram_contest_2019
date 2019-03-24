@@ -10,17 +10,22 @@ class PlotBase {
 
   appendTo($container) {
     this.$container = $container;
-    this.plotter = new Plotter(this);
     this.render();
   }
 
   render() {
+    const width = this.$container.clientWidth;
+    const height = this.$container.clientHeight;
+
     this.$paths = {};
-    this.$element = createSvgElement('svg', {
-      width: this.plotter.width,
-      height: this.plotter.height,
-      viewBox: this.plotter.viewBoxFromScreen(),
-      preserveAspectRatio: 'none',
+    this.$element = createSvgElement('svg', { preserveAspectRatio: 'none' });
+
+    this.plotter = new Plotter({
+      width,
+      height,
+      $svg: this.$element,
+      x: this.x,
+      graphs: this.graphs,
     });
 
     objectForEach(this.graphs, (key, { color }) => {
@@ -40,19 +45,11 @@ class PlotBase {
       this.$paths[key].classList.toggle('hidden', !visible);
     });
 
-    const viewBox = this.$element
-      .getAttribute('viewBox')
-      .split(' ')
-      .map(v => +v);
-    const newViewBox = this.plotter
-      .viewBoxFromRange(this.x[0], this.x[this.x.length - 1])
-      .split(' ')
-      .map(v => +v);
+    this.plotter.updateDomain();
 
     animateViewBox({
       $svg: this.$element,
-      from: viewBox,
-      to: newViewBox,
+      to: this.plotter.viewBoxFromRatios(),
       duration: 200,
     });
   }

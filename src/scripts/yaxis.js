@@ -1,18 +1,17 @@
-import Plotter from './plotter';
 import { createElement } from './utils';
 
 const numberOfLabels = 5;
 const textMargin = 4;
 
 class YAxis {
-  constructor({ x, graphs }) {
+  constructor({ x, graphs, plotter }) {
     this.x = x;
     this.graphs = graphs;
+    this.plotter = plotter;
   }
 
   appendTo($container) {
     this.$container = $container;
-    this.plotter = new Plotter(this);
     this.render();
   }
 
@@ -61,8 +60,6 @@ class YAxis {
   }
 
   update() {
-    this.plotter.updateDomain();
-
     const { labels, lines } = this.renderLables();
     const distance = this.plotter.height / numberOfLabels;
 

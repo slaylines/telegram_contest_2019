@@ -1,65 +1,54 @@
-import {
-  min,
-  max,
-  closestLeftIndexOf,
-  closestRightIndexOf,
-  objectFilter,
-} from './utils';
+import { max, leftIndexFromRatio, rightIndexFromRatio } from './utils';
+
+const graphsMax = (graphs, imin, imax) =>
+  max(
+    Object.values(graphs).map(({ values, visible }) =>
+      visible ? max(values.slice(imin, imax)) : Number.MIN_SAFE_INTEGER
+    )
+  );
 
 class Plotter {
-  constructor({ $container, x, graphs }) {
-    this.width = $container.clientWidth;
-    this.height = $container.clientHeight;
+  constructor({ $svg, width, height, x, graphs }) {
+    this.$svg = $svg;
+    this.width = width;
+    this.height = height;
 
     this.x = x;
     this.graphs = graphs;
 
-    this.screen = {
+    this.left = 0;
+    this.right = 1;
+    this.domain = this.domainFromRatios();
+    this.current = Object.assign({}, this.domain);
+
+    this.$svg.setAttribute('width', width);
+    this.$svg.setAttribute('height', height);
+    this.$svg.setAttribute('viewBox', this.viewBoxFromScreen());
+  }
+
+  get screen() {
+    return {
       x: [0, this.width],
       y: [0, this.height],
     };
-
-    this.domain = this.domainFromRange(min(x), max(x));
-    this.range = Object.assign({}, this.domain);
   }
 
-  domainFromRange(a, b) {
-    const graphs = objectFilter(this.graphs, (key, graph) => graph.visible);
-    const imin = closestLeftIndexOf(this.x, a);
-    const imax = closestRightIndexOf(this.x, b);
-    const ymax = max(
-      Object.values(graphs).map(({ values }) =>
-        max(values.slice(imin, imax + 1))
-      )
-    );
+  /**
+   * Conversion between coordinate systems.
+   */
 
-    return {
-      x: [a, b],
-      y: [0, ymax],
-    };
-  }
-
-  toScreenX(v) {
-    const dx = this.domain.x;
+  toScreenX(v, isCurrent = false) {
+    const dx = (isCurrent ? this.current : this.domain).x;
     const sx = this.screen.x;
 
     return sx[0] + ((v - dx[0]) / (dx[1] - dx[0])) * (sx[1] - sx[0]);
   }
 
-  toScreenY(v) {
-    const dy = this.domain.y;
+  toScreenY(v, isCurrent = false) {
+    const dy = (isCurrent ? this.current : this.domain).y;
     const sy = this.screen.y;
 
     return sy[1] - sy[0] - ((v - dy[0]) / (dy[1] - dy[0])) * (sy[1] - sy[0]);
-  }
-
-  toScreenYInRange(v) {
-    const graphs = objectFilter(this.graphs, (key, graph) => graph.visible);
-    const ymax = max(Object.values(graphs).map(({ values }) => max(values)));
-    const ymin = this.domain.y[0];
-    const sy = this.screen.y;
-
-    return sy[1] - sy[0] - ((v - ymin) / (ymax - ymin)) * (sy[1] - sy[0]);
   }
 
   toScreen(d) {
@@ -69,22 +58,19 @@ class Plotter {
     };
   }
 
-  toDomainX(v) {
-    const dx = this.domain.x;
+  toDomainX(v, isCurrent = false) {
+    const dx = (isCurrent ? this.current : this.domain).x;
     const sx = this.screen.x;
 
     return dx[0] + ((v - sx[0]) / (sx[1] - sx[0])) * (dx[1] - dx[0]);
   }
 
+  /**
+   * For initial PlotBase rendering.
+   */
+
   viewBoxFromScreen(s = this.screen) {
     return `${s.x[0]} ${s.y[0]} ${s.x[1] - s.x[0]} ${s.y[1] - s.y[0]}`;
-  }
-
-  viewBoxFromRange(a, b) {
-    const d = this.domainFromRange(a, b);
-    const s = this.toScreen(d);
-
-    return this.viewBoxFromScreen(s);
   }
 
   getPathLine(key) {
@@ -96,8 +82,46 @@ class Plotter {
     }, '');
   }
 
+  /**
+   * For getting viewBox for a given selection.
+   */
+
+  domainFromRatios() {
+    const imin = leftIndexFromRatio(this.x, this.left);
+    const imax = rightIndexFromRatio(this.x, this.right);
+
+    const xgmin = this.x[0];
+    const xgmax = this.x[this.x.length - 1];
+
+    const xmin = xgmin + (xgmax - xgmin) * this.left;
+    const xmax = xgmin + (xgmax - xgmin) * this.right;
+    const ymin = 0;
+    const ymax = graphsMax(this.graphs, imin, imax);
+
+    return {
+      x: [xmin, xmax],
+      y: [ymin, ymax],
+    };
+  }
+
+  viewBoxFromRatios() {
+    const s = this.toScreen(this.current);
+
+    return this.viewBoxFromScreen(s);
+  }
+
+  /**
+   * Update methods.
+   */
+
+  setRatios(a, b) {
+    this.left = a;
+    this.right = b;
+    this.updateDomain();
+  }
+
   updateDomain() {
-    this.domain = this.domainFromRange(min(this.x), max(this.x));
+    this.current = this.domainFromRatios();
   }
 }
 

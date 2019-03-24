@@ -93,8 +93,8 @@ class Chart {
     this.timeline.update();
   }
 
-  onTimelineChange(screen) {
-    this.plot.updateViewport(screen);
+  onTimelineChange(left, right) {
+    this.plot.updateViewport(left, right);
   }
 }
 

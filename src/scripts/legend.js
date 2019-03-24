@@ -1,15 +1,14 @@
-import Plotter from './plotter';
 import { createElement, objectForEach, formatDate } from './utils';
 
 class Legend {
-  constructor({ x, graphs }) {
+  constructor({ x, graphs, plotter }) {
     this.x = x;
     this.graphs = graphs;
+    this.plotter = plotter;
   }
 
   appendTo($container) {
     this.$container = $container;
-    this.plotter = new Plotter(this);
     this.render();
   }
 
@@ -43,7 +42,7 @@ class Legend {
   }
 
   onMouseMove(event) {
-    const dateTime = this.plotter.toDomainX(event.offsetX);
+    const dateTime = this.plotter.toDomainX(event.offsetX, true);
 
     const position = this.x.reduce((prev, value, i, array) => {
       return Math.abs(value - dateTime) < Math.abs(array[prev] - dateTime)
@@ -52,17 +51,16 @@ class Legend {
     }, 0);
 
     const x = this.x[position];
-    const xCoord = this.plotter.toScreenX(x);
+    const xCoord = this.plotter.toScreenX(x, true);
 
     this.line.style['left'] = `${xCoord}px`;
     this.line.style['opacity'] = 1;
 
     objectForEach(this.graphs, (key, { values, visible }) => {
       if (visible) {
+        const yCoord = this.plotter.toScreenY(values[position], true);
         this.circles[key].style['left'] = `${xCoord}px`;
-        this.circles[key].style['top'] = `${this.plotter.toScreenYInRange(
-          values[position]
-        )}px`;
+        this.circles[key].style['top'] = `${yCoord}px`;
         this.circles[key].style['opacity'] = 1;
       } else {
         this.circles[key].style['opacity'] = 0;

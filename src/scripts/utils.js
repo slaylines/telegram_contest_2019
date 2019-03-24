@@ -23,19 +23,11 @@ export const viewBoxToArray = viewBox =>
 
 export const arrayToViewBox = array => array.join(' ');
 
-export const closestLeftIndexOf = (array, value) =>
-  array.findIndex(
-    (_, index) =>
-      array[index] === value ||
-      (array[index] < value && value < array[index + 1])
-  );
+export const leftIndexFromRatio = (array, ratio) =>
+  Math.floor((array.length - 1) * ratio);
 
-export const closestRightIndexOf = (array, value) =>
-  array.findIndex(
-    (_, index) =>
-      array[index] === value ||
-      (array[index - 1] < value && value < array[index])
-  );
+export const rightIndexFromRatio = (array, ratio) =>
+  Math.ceil((array.length - 1) * ratio);
 
 export const createElement = (
   tag,
