@@ -11,6 +11,10 @@ class Timeline extends PlotBase {
     this.onTimelineChange = onTimelineChange;
     this.onTimelineEnd = onTimelineEnd;
     this.onDrag = debounce(this.onDrag, this);
+    this.onStopDrag = this.onStopDrag.bind(this);
+    this.onStartDragLeft = this.onStartDrag('dragLeft').bind(this);
+    this.onStartDragArea = this.onStartDrag('dragArea').bind(this);
+    this.onStartDragRight = this.onStartDrag('dragRight').bind(this);
   }
 
   render() {
@@ -38,16 +42,10 @@ class Timeline extends PlotBase {
     this.renderRightBackground();
 
     this.$container.addEventListener('mousemove', this.onDrag);
+    // this.$container.addEventListener('touchmove', this.onDrag);
 
-    document.addEventListener('mouseup', () => {
-      if (!this.dragArea && !this.dragLeft && !this.dragRight) return;
-
-      this.dragArea = false;
-      this.dragLeft = false;
-      this.dragRight = false;
-      this.area.$element.classList.toggle('dragging', false);
-      this.onStopDrag();
-    });
+    document.addEventListener('mouseup', this.onStopDrag);
+    // document.addEventListener('touchend', this.onStopDrag);
 
     this.$container.appendChild(this.$selection);
   }
@@ -57,10 +55,8 @@ class Timeline extends PlotBase {
     this.$selection.appendChild(this.leftBar.$element);
     this.updateLeftBar();
 
-    this.leftBar.$element.addEventListener('mousedown', event => {
-      this.dragLeft = true;
-      this.onStartDrag(event);
-    });
+    this.leftBar.$element.addEventListener('mousedown', this.onStartDragLeft);
+    // this.leftBar.$element.addEventListener('touchstart', this.onStartDragLeft);
   }
 
   updateLeftBar() {
@@ -83,10 +79,8 @@ class Timeline extends PlotBase {
     this.$selection.appendChild(this.rightBar.$element);
     this.updateRightBar();
 
-    this.rightBar.$element.addEventListener('mousedown', event => {
-      this.dragRight = true;
-      this.onStartDrag(event);
-    });
+    this.rightBar.$element.addEventListener('mousedown', this.onStartDragRight);
+    // this.rightBar.$element.addEventListener('touchstart', this.onStartDragRight);
   }
 
   updateRightBar() {
@@ -109,11 +103,8 @@ class Timeline extends PlotBase {
     this.$selection.appendChild(this.area.$element);
     this.updateArea();
 
-    this.area.$element.addEventListener('mousedown', event => {
-      this.dragArea = true;
-      this.area.$element.classList.toggle('dragging', true);
-      this.onStartDrag(event);
-    });
+    this.area.$element.addEventListener('mousedown', this.onStartDragArea);
+    // this.area.$element.addEventListener('touchstart', this.onStartDragArea);
   }
 
   updateArea() {
@@ -170,15 +161,28 @@ class Timeline extends PlotBase {
     });
   }
 
-  onStartDrag(event) {
-    this.startDomain = Object.assign({}, this.plotter.previous);
-    this.startMouseX = event.x;
-    this.mouseX = event.x;
+  onStartDrag(key) {
+    return event => {
+      this[key] = true;
+      this.area.$element.classList.toggle('dragging', true);
+      this.startDomain = Object.assign({}, this.plotter.previous);
+      this.startMouseX = event.x;
+      this.mouseX = event.x;
+    };
   }
 
   onStopDrag() {
+    if (!this.dragArea && !this.dragLeft && !this.dragRight) return;
+
+    this.dragArea = false;
+    this.dragLeft = false;
+    this.dragRight = false;
+
+    this.area.$element.classList.toggle('dragging', false);
+
     this.startMouseX = null;
     this.mouseX = null;
+
     this.onTimelineEnd(this.startDomain);
   }
 
