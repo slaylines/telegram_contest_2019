@@ -1,10 +1,16 @@
 import PlotBase from './plot-base';
+import XAxis from './xaxis';
 import YAxis from './yaxis';
 import Legend from './legend';
 
 class Plot extends PlotBase {
   render() {
     super.render();
+
+    this.xaxis = new XAxis({
+      x: this.x,
+      plotter: this.plotter,
+    });
 
     this.yaxis = new YAxis({
       x: this.x,
@@ -20,6 +26,11 @@ class Plot extends PlotBase {
 
     this.yaxis.appendTo(this.$container);
     this.legend.appendTo(this.$container);
+    this.xaxis.appendTo(this.$container);
+  }
+
+  updateXAxis() {
+    this.xaxis.update();
   }
 
   updateYAxis(startDomain) {

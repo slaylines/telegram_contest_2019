@@ -110,6 +110,7 @@ class Chart {
 
   onTimelineChange(left, right) {
     this.plot.updateViewport(left, right);
+    this.plot.updateXAxis();
   }
 
   onTimelineEnd(startDomain) {

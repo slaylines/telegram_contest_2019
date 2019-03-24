@@ -79,6 +79,12 @@ export const formatDate = timestamp => {
   } ${date.getUTCDate()}`;
 };
 
+export const formatAxisDate = timestamp => {
+  const date = new Date(timestamp);
+
+  return `${months[date.getUTCMonth()]} ${date.getUTCDate()}`;
+};
+
 export const debounce = (func, context, delay = 0) => {
   let timeout;
 
@@ -91,3 +97,6 @@ export const debounce = (func, context, delay = 0) => {
     );
   };
 };
+
+export const nearestPow = value =>
+  Math.pow(2, Math.round(Math.log(value) / Math.log(2)));
