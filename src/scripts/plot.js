@@ -47,6 +47,12 @@ class Plot extends PlotBase {
     this.plotter.setRatios(left, right);
     this.$element.setAttribute('viewBox', this.plotter.viewBoxFromRatios());
   }
+
+  resize() {
+    super.resize();
+
+    this.xaxis.update();
+  }
 }
 
 export default Plot;
