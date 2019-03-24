@@ -16,13 +16,18 @@ body {
 main {
   display: flex;
   flex-wrap: wrap;
-  width: 60%;
+  width: 100%;
+  padding: 0 20px;
+
+  @media (min-width: $sm) {
+    width: 60%;
+  }
 }
 
 figure {
   position: relative;
   width: 100%;
-  margin: 10px 20px;
+  margin: 0;
   padding: 0;
 
   h1 {

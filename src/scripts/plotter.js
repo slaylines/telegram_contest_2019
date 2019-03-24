@@ -10,21 +10,11 @@ const graphsMax = (graphs, imin, imax) =>
 class Plotter {
   constructor({ $svg, width, height, x, graphs }) {
     this.$svg = $svg;
-    this.width = width;
-    this.height = height;
 
     this.x = x;
     this.graphs = graphs;
 
-    this.left = 0;
-    this.right = 1;
-    this.domain = this.domainFromRatios();
-    this.current = Object.assign({}, this.domain);
-    this.previous = Object.assign({}, this.domain);
-
-    this.$svg.setAttribute('width', width);
-    this.$svg.setAttribute('height', height);
-    this.$svg.setAttribute('viewBox', this.viewBoxFromScreen());
+    this.resize(width, height);
   }
 
   get screen() {
@@ -159,6 +149,22 @@ class Plotter {
   updateDomain() {
     this.previous = Object.assign({}, this.current);
     this.current = this.domainFromRatios();
+  }
+
+  resize(width, height) {
+    this.left = 0;
+    this.right = 1;
+
+    this.width = width;
+    this.height = height;
+
+    this.domain = this.domainFromRatios();
+    this.current = Object.assign({}, this.domain);
+    this.previous = Object.assign({}, this.domain);
+
+    this.$svg.setAttribute('width', width);
+    this.$svg.setAttribute('height', height);
+    this.$svg.setAttribute('viewBox', this.viewBoxFromScreen());
   }
 }
 

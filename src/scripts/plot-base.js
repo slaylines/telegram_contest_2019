@@ -18,7 +18,6 @@ class PlotBase {
     const width = this.$container.clientWidth;
     const height = this.$container.clientHeight;
 
-    this.$paths = {};
     this.$element = createSvgElement('svg', { preserveAspectRatio: 'none' });
 
     this.plotter = new Plotter({
@@ -29,6 +28,13 @@ class PlotBase {
       graphs: this.graphs,
     });
 
+    this.renderPathLines();
+    this.$container.appendChild(this.$element);
+  }
+
+  renderPathLines() {
+    this.$paths = {};
+
     objectForEach(this.graphs, (key, { color }) => {
       this.$paths[key] = createSvgElement('path', {
         d: this.plotter.getPathLine(key),
@@ -37,8 +43,12 @@ class PlotBase {
 
       this.$element.appendChild(this.$paths[key]);
     });
+  }
 
-    this.$container.appendChild(this.$element);
+  updatePathLines() {
+    objectForEach(this.graphs, key => {
+      this.$paths[key].setAttribute('d', this.plotter.getPathLine(key));
+    });
   }
 
   update() {
@@ -53,6 +63,14 @@ class PlotBase {
       to: this.plotter.viewBoxFromRatios(),
       duration: BaseAnimationDuration,
     });
+  }
+
+  resize() {
+    const width = this.$container.clientWidth;
+    const height = this.$container.clientHeight;
+
+    this.plotter.resize(width, height);
+    this.updatePathLines();
   }
 }
 

@@ -2,7 +2,13 @@ import Plot from './plot';
 import Timeline from './timeline';
 import Filter from './filter';
 import { ChartType } from './constants';
-import { createElement, pairsToObject, objectFilter, objectMap } from './utils';
+import {
+  createElement,
+  pairsToObject,
+  objectFilter,
+  objectMap,
+  debounce,
+} from './utils';
 
 const xKeyFromTypes = types =>
   Object.keys(objectFilter(types, (key, type) => type === ChartType.x))[0];
@@ -26,6 +32,9 @@ class Chart {
       name: names[key],
       visible: true,
     }));
+
+    this.resize = debounce(this.resize, this);
+    window.addEventListener('resize', this.resize);
   }
 
   appendTo($container) {
@@ -41,6 +50,11 @@ class Chart {
     this.renderPlot();
     this.renderTimeline();
     this.renderFilter();
+  }
+
+  resize() {
+    this.plot.resize();
+    this.timeline.resize();
   }
 
   renderTitle() {

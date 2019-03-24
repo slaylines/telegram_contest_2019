@@ -18,6 +18,16 @@ class Timeline extends PlotBase {
     this.renderSelection();
   }
 
+  resize() {
+    super.resize();
+
+    this.updateLeftBar();
+    this.updateRightBar();
+    this.updateArea();
+    this.updateLeftBackground();
+    this.updateRightBackground();
+  }
+
   renderSelection() {
     this.$selection = createElement('div', { classes: 'selection' });
 
@@ -43,23 +53,9 @@ class Timeline extends PlotBase {
   }
 
   renderLeftBar() {
-    const xmin = this.plotter.screen.x[0];
-
-    this.leftBar = {
-      value: xmin,
-      x: Math.max(xmin - barSize, xmin),
-      width: barSize,
-    };
-
-    this.leftBar.$element = createElement('div', {
-      classes: 'selector',
-      style: {
-        left: `${this.leftBar.x}px`,
-        width: `${this.leftBar.width}px`,
-      },
-    });
-
+    this.leftBar = { $element: createElement('div', { classes: 'selector' }) };
     this.$selection.appendChild(this.leftBar.$element);
+    this.updateLeftBar();
 
     this.leftBar.$element.addEventListener('mousedown', event => {
       this.dragLeft = true;
@@ -67,24 +63,25 @@ class Timeline extends PlotBase {
     });
   }
 
-  renderRightBar() {
-    const xmax = this.plotter.screen.x[1];
+  updateLeftBar() {
+    const xmin = this.plotter.screen.x[0];
 
-    this.rightBar = {
-      value: xmax,
-      x: Math.min(xmax - barSize, xmax),
+    Object.assign(this.leftBar, {
+      value: xmin,
+      x: Math.max(xmin - barSize, xmin),
       width: barSize,
-    };
-
-    this.rightBar.$element = createElement('div', {
-      classes: 'selector',
-      style: {
-        left: `${this.rightBar.x}px`,
-        width: `${this.rightBar.width}px`,
-      },
     });
 
+    Object.assign(this.leftBar.$element.style, {
+      left: `${this.leftBar.x}px`,
+      width: `${this.leftBar.width}px`,
+    });
+  }
+
+  renderRightBar() {
+    this.rightBar = { $element: createElement('div', { classes: 'selector' }) };
     this.$selection.appendChild(this.rightBar.$element);
+    this.updateRightBar();
 
     this.rightBar.$element.addEventListener('mousedown', event => {
       this.dragRight = true;
@@ -92,21 +89,25 @@ class Timeline extends PlotBase {
     });
   }
 
-  renderArea() {
-    this.area = {
-      x: this.leftBar.x + this.leftBar.width,
-      width: this.rightBar.x - this.leftBar.x - this.leftBar.width,
-    };
+  updateRightBar() {
+    const xmax = this.plotter.screen.x[1];
 
-    this.area.$element = createElement('div', {
-      classes: 'area',
-      style: {
-        left: `${this.area.x}px`,
-        width: `${this.area.width}px`,
-      },
+    Object.assign(this.rightBar, {
+      value: xmax,
+      x: Math.min(xmax - barSize, xmax),
+      width: barSize,
     });
 
+    Object.assign(this.rightBar.$element.style, {
+      left: `${this.rightBar.x}px`,
+      width: `${this.rightBar.width}px`,
+    });
+  }
+
+  renderArea() {
+    this.area = { $element: createElement('div', { classes: 'area' }) };
     this.$selection.appendChild(this.area.$element);
+    this.updateArea();
 
     this.area.$element.addEventListener('mousedown', event => {
       this.dragArea = true;
@@ -115,42 +116,58 @@ class Timeline extends PlotBase {
     });
   }
 
-  renderLeftBackground() {
-    const xmin = this.plotter.screen.x[0];
-
-    this.leftBg = {
-      x: xmin,
-      width: Math.min(this.leftBar.x - xmin, 0),
-    };
-
-    this.leftBg.$element = createElement('div', {
-      classes: 'background',
-      style: {
-        left: `${this.leftBg.x}px`,
-        width: `${this.leftBg.width}px`,
-      },
+  updateArea() {
+    Object.assign(this.area, {
+      x: this.leftBar.x + this.leftBar.width,
+      width: this.rightBar.x - this.leftBar.x - this.leftBar.width,
     });
 
+    Object.assign(this.area.$element.style, {
+      left: `${this.area.x}px`,
+      width: `${this.area.width}px`,
+    });
+  }
+
+  renderLeftBackground() {
+    this.leftBg = { $element: createElement('div', { classes: 'background' }) };
     this.$selection.appendChild(this.leftBg.$element);
+    this.updateLeftBackground();
+  }
+
+  updateLeftBackground() {
+    const xmin = this.plotter.screen.x[0];
+
+    Object.assign(this.leftBg, {
+      x: xmin,
+      width: Math.min(this.leftBar.x - xmin, 0),
+    });
+
+    Object.assign(this.leftBg.$element.style, {
+      left: `${this.leftBg.x}px`,
+      width: `${this.leftBg.width}px`,
+    });
   }
 
   renderRightBackground() {
+    this.rightBg = {
+      $element: createElement('div', { classes: 'background' }),
+    };
+    this.$selection.appendChild(this.rightBg.$element);
+    this.updateRightBackground();
+  }
+
+  updateRightBackground() {
     const xmax = this.plotter.screen.x[1];
 
-    this.rightBg = {
+    Object.assign(this.rightBg, {
       x: this.rightBar.x + this.rightBar.width,
       width: Math.max(xmax - this.rightBar.x - this.rightBar.width, 0),
-    };
-
-    this.rightBg.$element = createElement('div', {
-      classes: 'background',
-      style: {
-        left: `${this.rightBg.x}px`,
-        width: `${this.rightBg.width}px`,
-      },
     });
 
-    this.$selection.appendChild(this.rightBg.$element);
+    Object.assign(this.rightBg.$element.style, {
+      left: `${this.rightBg.x}px`,
+      width: `${this.rightBg.width}px`,
+    });
   }
 
   onStartDrag(event) {
