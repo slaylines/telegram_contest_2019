@@ -385,7 +385,7 @@ body {
       .legend-data {
         background: $dark-gray;
         border-color: $dark-gray;
-        box-shadow: 0px 0px 2px lighten($dark-gray, 5%);
+        box-shadow: 0px 0px 2px darken($dark-gray, 5%);
       }
 
       .legend-circle {
