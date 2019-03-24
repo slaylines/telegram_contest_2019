@@ -18,11 +18,26 @@ main {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  padding: 0 20px;
+  padding: 0 20px $footer-height;
 
   @media (min-width: $sm) {
     width: 60%;
   }
+}
+
+footer {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 0;
+  width: 100%;
+  height: $footer-height;
+  background: inherit;
+  font-size: 18px;
+  color: $blue;
+  z-index: 100;
+  cursor: pointer;
 }
 
 figure {
@@ -96,14 +111,14 @@ rect {
     }
 
     .selector {
-      background: #999;
+      background: $light-blue;
       opacity: 0.4;
       cursor: col-resize;
     }
 
     .area {
-      background: rgba(0, 0, 0, 0);
-      border: 1px solid #999;
+      background: transparent;
+      border: 2px solid $light-blue;
       opacity: 0.4;
       cursor: grab;
 
@@ -113,7 +128,7 @@ rect {
     }
 
     .background {
-      background: #eee;
+      background: $lighter-blue;
       opacity: 0.7;
     }
   }
@@ -131,7 +146,7 @@ rect {
     opacity: 1;
     z-index: -1;
     font-weight: lighter;
-    color: #999;
+    color: $darker-gray;
     text-align: center;
     white-space: nowrap;
 
@@ -164,13 +179,13 @@ rect {
       margin: 0;
       width: 100%;
       border: 0;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid $gray;
     }
 
     .label-text {
       display: block;
       font-weight: lighter;
-      color: #999;
+      color: $darker-gray;
       margin-bottom: 4px;
     }
 
@@ -192,10 +207,10 @@ rect {
     padding: 8px 10px;
     top: 5px;
     z-index: 11;
-    border: 1px solid #ddd;
+    border: 1px solid $gray;
     border-radius: 6px;
-    background: #fff;
-    box-shadow: 0px 0px 4px 1px #eee;
+    background: $white;
+    box-shadow: 0px 0px 2px darken($gray, 5%);
     transform: translateX(-50%);
     font-size: 14px;
     white-space: nowrap;
@@ -225,7 +240,7 @@ rect {
     left: 0;
     height: calc(100% - 10px);
     border: 0;
-    border-left: 1px solid #ddd;
+    border-left: 1px solid darken($gray, 10%);
     pointer-events: none;
     opacity: 0;
     transition: all 50ms linear;
@@ -239,7 +254,7 @@ rect {
     width: 12px;
     height: 12px;
     border: 3px solid;
-    background: #fff;
+    background: $white;
     border-radius: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
@@ -306,6 +321,95 @@ rect {
     &.checked {
       .filter-circle {
         border-width: $filter-circle-size / 2;
+      }
+    }
+  }
+}
+
+/* Theme */
+body {
+  &.day {
+    background: $white;
+    color: $black;
+
+    footer {
+      .night {
+        display: inline;
+      }
+
+      .day {
+        display: none;
+      }
+    }
+  }
+
+  &.night {
+    background: $dark-gray;
+    color: $white;
+
+    .yaxis {
+      .label {
+        .label-line {
+          border-color: $alt-gray;
+        }
+
+        .label-text {
+          color: $lighter-alt-gray;
+        }
+      }
+    }
+
+    .xaxis {
+      .label {
+        color: $lighter-alt-gray;
+      }
+    }
+
+    .timeline {
+      .selection {
+        .selector {
+          background: $white;
+        }
+
+        .area {
+          border-color: $white;
+        }
+
+        .background {
+          background: darken($dark-gray, 3%);
+        }
+      }
+    }
+
+    .legend {
+      .legend-data {
+        background: $dark-gray;
+        border-color: $dark-gray;
+        box-shadow: 0px 0px 2px lighten($dark-gray, 5%);
+      }
+
+      .legend-circle {
+        background: $dark-gray;
+      }
+
+      .legend-line {
+        border-color: lighten($dark-gray, 10%);
+      }
+    }
+
+    .filter {
+      .filter-button {
+        border-color: $alt-gray;
+      }
+    }
+
+    footer {
+      .night {
+        display: none;
+      }
+
+      .day {
+        display: inline;
       }
     }
   }
