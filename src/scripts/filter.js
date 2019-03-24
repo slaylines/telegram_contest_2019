@@ -1,5 +1,9 @@
 import { createElement, objectForEach } from './utils';
 
+const isCheckable = ($button, graphs) =>
+  !$button.classList.contains('checked') ||
+  Object.values(graphs).filter(({ visible }) => visible).length > 1;
+
 class Filter {
   constructor({ graphs, onFilterToggle }) {
     this.graphs = graphs;
@@ -23,6 +27,8 @@ class Filter {
       });
 
       $button.addEventListener('click', () => {
+        if (!isCheckable($button, this.graphs)) return;
+
         $button.classList.toggle('checked');
         this.onFilterToggle(key, !graph.visible);
       });
