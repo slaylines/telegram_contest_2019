@@ -100,3 +100,6 @@ export const debounce = (func, context, delay = 0) => {
 
 export const nearestPow = value =>
   Math.pow(2, Math.round(Math.log(value) / Math.log(2)));
+
+export const getClientX = event =>
+  event.targetTouches ? event.targetTouches[0].clientX : event.clientX;

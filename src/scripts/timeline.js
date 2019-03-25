@@ -1,5 +1,5 @@
 import PlotBase from './plot-base';
-import { createElement, debounce } from './utils';
+import { createElement, debounce, getClientX } from './utils';
 
 const barSize = 8;
 const minDiff = 30;
@@ -42,10 +42,10 @@ class Timeline extends PlotBase {
     this.renderRightBackground();
 
     this.$container.addEventListener('mousemove', this.onDrag);
-    // this.$container.addEventListener('touchmove', this.onDrag);
+    this.$container.addEventListener('touchmove', this.onDrag);
 
     document.addEventListener('mouseup', this.onStopDrag);
-    // document.addEventListener('touchend', this.onStopDrag);
+    document.addEventListener('touchend', this.onStopDrag);
 
     this.$container.appendChild(this.$selection);
   }
@@ -56,7 +56,7 @@ class Timeline extends PlotBase {
     this.updateLeftBar();
 
     this.leftBar.$element.addEventListener('mousedown', this.onStartDragLeft);
-    // this.leftBar.$element.addEventListener('touchstart', this.onStartDragLeft);
+    this.leftBar.$element.addEventListener('touchstart', this.onStartDragLeft);
   }
 
   updateLeftBar() {
@@ -80,7 +80,10 @@ class Timeline extends PlotBase {
     this.updateRightBar();
 
     this.rightBar.$element.addEventListener('mousedown', this.onStartDragRight);
-    // this.rightBar.$element.addEventListener('touchstart', this.onStartDragRight);
+    this.rightBar.$element.addEventListener(
+      'touchstart',
+      this.onStartDragRight
+    );
   }
 
   updateRightBar() {
@@ -104,7 +107,7 @@ class Timeline extends PlotBase {
     this.updateArea();
 
     this.area.$element.addEventListener('mousedown', this.onStartDragArea);
-    // this.area.$element.addEventListener('touchstart', this.onStartDragArea);
+    this.area.$element.addEventListener('touchstart', this.onStartDragArea);
   }
 
   updateArea() {
@@ -163,11 +166,13 @@ class Timeline extends PlotBase {
 
   onStartDrag(key) {
     return event => {
+      const clientX = getClientX(event);
+
       this[key] = true;
       this.area.$element.classList.toggle('dragging', true);
       this.startDomain = Object.assign({}, this.plotter.previous);
-      this.startMouseX = event.x;
-      this.mouseX = event.x;
+      this.startMouseX = clientX;
+      this.mouseX = clientX;
     };
   }
 
@@ -203,7 +208,7 @@ class Timeline extends PlotBase {
       this.onDragRight(event);
     }
 
-    this.mouseX = event.x;
+    this.mouseX = getClientX(event);
 
     this.onTimelineChange(
       this.leftBar.value / this.plotter.width,
@@ -213,7 +218,7 @@ class Timeline extends PlotBase {
 
   onDragArea(event) {
     const [xmin, xmax] = this.plotter.screen.x;
-    let delta = event.x - this.mouseX;
+    let delta = getClientX(event) - this.mouseX;
 
     if (delta > 0) {
       const right = this.rightBar.x + this.rightBar.width + delta;
@@ -251,7 +256,7 @@ class Timeline extends PlotBase {
   }
 
   onDragLeft(event) {
-    let delta = event.x - this.mouseX;
+    let delta = getClientX(event) - this.mouseX;
 
     if (delta > 0) {
       const left = this.leftBar.x + this.leftBar.width + delta;
@@ -282,7 +287,7 @@ class Timeline extends PlotBase {
   }
 
   onDragRight(event) {
-    let delta = event.x - this.mouseX;
+    let delta = getClientX(event) - this.mouseX;
 
     if (delta > 0) {
       const right = this.rightBar.x + this.rightBar.width + delta;
