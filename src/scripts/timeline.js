@@ -170,7 +170,8 @@ class Timeline extends PlotBase {
 
       this[key] = true;
       this.area.$element.classList.toggle('dragging', true);
-      this.startDomain = Object.assign({}, this.plotter.previous);
+      this.startLeft = this.leftBar.value / this.plotter.width;
+      this.startRight = this.rightBar.value / this.plotter.width;
       this.startMouseX = clientX;
       this.mouseX = clientX;
     };
@@ -188,7 +189,7 @@ class Timeline extends PlotBase {
     this.startMouseX = null;
     this.mouseX = null;
 
-    this.onTimelineEnd(this.startDomain);
+    this.onTimelineEnd(this.startLeft, this.startRight);
   }
 
   onDrag(event) {

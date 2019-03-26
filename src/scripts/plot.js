@@ -33,8 +33,9 @@ class Plot extends PlotBase {
     this.xaxis.update();
   }
 
-  updateYAxis(startDomain) {
-    this.yaxis.update(startDomain);
+  updateYAxis(left, right) {
+    const domain = this.plotter.domainFromRatios(left, right);
+    this.yaxis.update(domain);
   }
 
   update() {

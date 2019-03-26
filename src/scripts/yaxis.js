@@ -64,26 +64,32 @@ class YAxis {
     }
   }
 
-  update(startDomain = this.plotter.previous) {
+  update(domain = this.plotter.previous) {
+    if (
+      domain.y[0] === this.plotter.current.y[0] &&
+      domain.y[1] === this.plotter.current.y[1]
+    ) {
+      return;
+    }
+
     this.$labels.forEach($label => {
       const hidden = $label.classList.contains('hidden');
 
       if (hidden) {
         const to = $label.y;
         const value = this.plotter.toCurrentDomainY(to);
-        const from = this.plotter.toScreenY(value, startDomain);
+        const from = this.plotter.toScreenY(value, domain);
         const text = Math.round(value);
 
         $label.$text.innerText = text;
 
         // TODO: Set initial position without animation.
-        //       The animation works even if the domain doesn't change.
         $label.style['transform'] = `translateY(${to - from}px)`;
         $label.classList.remove('hidden');
         $label.style['transform'] = 'translateY(0)';
       } else {
         const from = $label.y;
-        const value = this.plotter.toDomainY(from, startDomain);
+        const value = this.plotter.toDomainY(from, domain);
         const to = this.plotter.toCurrentScreenY(value);
 
         $label.classList.add('hidden');

@@ -113,8 +113,8 @@ class Chart {
     this.plot.updateXAxis();
   }
 
-  onTimelineEnd(startDomain) {
-    this.plot.updateYAxis(startDomain);
+  onTimelineEnd(left, right) {
+    this.plot.updateYAxis(left, right);
   }
 }
 

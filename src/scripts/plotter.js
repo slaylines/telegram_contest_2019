@@ -112,15 +112,15 @@ class Plotter {
    * For getting viewBox for a given selection.
    */
 
-  domainFromRatios() {
-    const imin = leftIndexFromRatio(this.x, this.left);
-    const imax = rightIndexFromRatio(this.x, this.right);
+  domainFromRatios(left = this.left, right = this.right) {
+    const imin = leftIndexFromRatio(this.x, left);
+    const imax = rightIndexFromRatio(this.x, right);
 
     const xgmin = this.x[0];
     const xgmax = this.x[this.x.length - 1];
 
-    const xmin = xgmin + (xgmax - xgmin) * this.left;
-    const xmax = xgmin + (xgmax - xgmin) * this.right;
+    const xmin = xgmin + (xgmax - xgmin) * left;
+    const xmax = xgmin + (xgmax - xgmin) * right;
     const ymin = 0;
     const ymax = graphsMax(this.graphs, imin, imax);
 
