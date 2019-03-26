@@ -32,7 +32,7 @@ class XAxis {
 
       const [xmin, xmax] = this.plotter.screen.x;
       this.delta = nearestPow(
-        Math.ceil((this.x.length * initialDistance) / (xmax - xmin))
+        Math.floor((this.x.length * initialDistance) / (xmax - xmin))
       );
 
       const $label = createElement('div', {

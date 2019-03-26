@@ -149,6 +149,7 @@ rect {
     color: $darker-gray;
     text-align: center;
     white-space: nowrap;
+    transition: opacity 200ms ease-in-out;
 
     &.hidden {
       opacity: 0;
