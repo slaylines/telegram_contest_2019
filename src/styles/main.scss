@@ -164,12 +164,12 @@ rect {
 
     &.right {
       right: 0;
-      background: linear-gradient(to left, #ffffff, rgba(0, 0, 0, 0));
+      background: linear-gradient(to left, $white, rgba(0, 0, 0, 0));
     }
 
     &.left {
       left: 0;
-      background: linear-gradient(to right, #ffffff, rgba(0, 0, 0, 0));
+      background: linear-gradient(to right, $white, rgba(0, 0, 0, 0));
     }
   }
 }
@@ -334,11 +334,17 @@ rect {
       background-repeat: no-repeat;
       background-size: cover;
       z-index: 1;
+      opacity: 0;
+      transition: opacity $base-animation-duration ease-in-out;
     }
 
     &.checked {
       .filter-circle {
         border-width: $filter-circle-size / 2;
+      }
+
+      &:before {
+        opacity: 1;
       }
     }
   }
@@ -380,6 +386,16 @@ body {
     .xaxis {
       .label {
         color: $lighter-alt-gray;
+      }
+
+      .shadow {
+        &.right {
+          background: linear-gradient(to left, $dark-gray, rgba(0, 0, 0, 0));
+        }
+
+        &.left {
+          background: linear-gradient(to right, $dark-gray, rgba(0, 0, 0, 0));
+        }
       }
     }
 
