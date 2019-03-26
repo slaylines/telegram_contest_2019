@@ -167,13 +167,13 @@ rect {
     top: 0;
 
     &.right {
-      @include horizontal-gradient(to left, $white, rgba($white, 0));
+      @include horizontal-gradient(rgba($white, 0), $white);
 
       right: 0;
     }
 
     &.left {
-      @include horizontal-gradient(to right, $white, rgba($white, 0));
+      @include horizontal-gradient($white, rgba($white, 0));
 
       left: 0;
     }
@@ -396,19 +396,11 @@ body {
 
       .shadow {
         &.right {
-          @include horizontal-gradient(
-            to left,
-            $dark-gray,
-            rgba($dark-gray, 0)
-          );
+          @include horizontal-gradient(rgba($dark-gray, 0), $dark-gray);
         }
 
         &.left {
-          @include horizontal-gradient(
-            to right,
-            $dark-gray,
-            rgba($dark-gray, 0)
-          );
+          @include horizontal-gradient($dark-gray, rgba($dark-gray, 0));
         }
       }
     }
