@@ -111,9 +111,12 @@ rect {
     }
 
     .selector {
+      @include hitbox(10px);
+
       background: $light-blue;
       opacity: 0.4;
       cursor: col-resize;
+      z-index: 2;
     }
 
     .area {

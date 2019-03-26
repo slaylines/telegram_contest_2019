@@ -42,3 +42,14 @@
   -ms-transform-style: $value;
   transform-style: $value;
 }
+
+@mixin hitbox($margin) {
+  &:before {
+    content: '';
+    position: absolute;
+    top: -$margin;
+    left: -$margin;
+    right: -$margin;
+    bottom: -$margin;
+  }
+}
