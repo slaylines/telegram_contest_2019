@@ -154,6 +154,24 @@ rect {
       opacity: 0;
     }
   }
+
+  .shadow {
+    position: absolute;
+    z-index: 1;
+    width: 30px;
+    height: 100%;
+    top: 0;
+
+    &.right {
+      right: 0;
+      background: linear-gradient(to left, #ffffff, rgba(0, 0, 0, 0));
+    }
+
+    &.left {
+      left: 0;
+      background: linear-gradient(to right, #ffffff, rgba(0, 0, 0, 0));
+    }
+  }
 }
 
 .yaxis {

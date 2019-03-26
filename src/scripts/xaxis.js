@@ -1,7 +1,7 @@
 import { createElement, formatAxisDate, nearestPow } from './utils';
 
 const labelWidth = 50;
-const initialDistance = 100;
+const initialDistance = 90;
 
 class XAxis {
   constructor({ x, plotter }) {
@@ -21,6 +21,8 @@ class XAxis {
     this.$labels = [];
     this.visibleLabels = [];
     this.renderLabels();
+
+    this.renderShadows();
   }
 
   renderLabels() {
@@ -30,7 +32,7 @@ class XAxis {
 
       const [xmin, xmax] = this.plotter.screen.x;
       this.delta = nearestPow(
-        Math.floor((this.x.length * initialDistance) / (xmax - xmin))
+        Math.ceil((this.x.length * initialDistance) / (xmax - xmin))
       );
 
       const $label = createElement('div', {
@@ -47,6 +49,14 @@ class XAxis {
       this.$labels.push($label);
       this.$element.appendChild($label);
     });
+  }
+
+  renderShadows() {
+    const leftShadow = createElement('div', { classes: 'shadow left' });
+    const rightShadow = createElement('div', { classes: 'shadow right' });
+
+    this.$element.appendChild(leftShadow);
+    this.$element.appendChild(rightShadow);
   }
 
   update() {
