@@ -167,13 +167,15 @@ rect {
     top: 0;
 
     &.right {
+      @include horizontal-gradient(to left, $white, rgba($white, 0));
+
       right: 0;
-      background: linear-gradient(to left, $white, rgba(0, 0, 0, 0));
     }
 
     &.left {
+      @include horizontal-gradient(to right, $white, rgba($white, 0));
+
       left: 0;
-      background: linear-gradient(to right, $white, rgba(0, 0, 0, 0));
     }
   }
 }
@@ -394,11 +396,19 @@ body {
 
       .shadow {
         &.right {
-          background: linear-gradient(to left, $dark-gray, rgba(0, 0, 0, 0));
+          @include horizontal-gradient(
+            to left,
+            $dark-gray,
+            rgba($dark-gray, 0)
+          );
         }
 
         &.left {
-          background: linear-gradient(to right, $dark-gray, rgba(0, 0, 0, 0));
+          @include horizontal-gradient(
+            to right,
+            $dark-gray,
+            rgba($dark-gray, 0)
+          );
         }
       }
     }
